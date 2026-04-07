@@ -1,0 +1,58 @@
+{
+  "projectType": "general",
+  "projectName": "Nothing Design Skill",
+  "projectDescription": "A Claude Code skill that generates UI in the Nothing design language — monochrome, typographic, and industrial — across HTML/CSS, SwiftUI, and React/Tailwind.",
+  "theme": "willow",
+  "primaryColor": "#dc7454",
+  "lightColor": "#e4a48c",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "installation", "quickstart"]
+          },
+          {
+            "group": "Design Philosophy",
+            "pages": ["philosophy/principles", "philosophy/craft-rules", "philosophy/anti-patterns"]
+          },
+          {
+            "group": "Tokens",
+            "pages": ["tokens/typography", "tokens/color", "tokens/spacing-motion"]
+          },
+          {
+            "group": "Components",
+            "pages": ["components/layout-surfaces", "components/controls", "components/data-display", "components/states"]
+          },
+          {
+            "group": "Platform Output",
+            "pages": ["platforms/html-css", "platforms/swiftui", "platforms/react-tailwind"]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Three-layer visual hierarchy (display, body, metadata)",
+    "Space Grotesk + Space Mono + Doto font stack",
+    "Full dark and light mode token system",
+    "Segmented progress bars, mechanical toggles, instrument-style widgets",
+    "Output as HTML/CSS, SwiftUI, or React/Tailwind",
+    "Anti-pattern enforcement (no gradients, no shadows, no toast popups)",
+    "Dot-matrix Doto typography for hero moments",
+    "Monochrome color system with precise gray-scale hierarchy"
+  ],
+  "publicApiSurface": [
+    "/nothing-design slash command",
+    "SKILL.md — skill trigger and workflow",
+    "references/tokens.md — typography, color, spacing, motion tokens",
+    "references/components.md — buttons, cards, inputs, lists, tables, overlays, state patterns",
+    "references/platform-mapping.md — HTML/CSS, SwiftUI, React/Tailwind output conventions",
+    "--text-display, --text-primary, --text-secondary, --text-disabled CSS tokens",
+    "--surface, --surface-raised, --border, --border-visible CSS tokens",
+    "--accent (#D71921), --success (#4A9E5C), --warning (#D4A843) status tokens"
+  ]
+}

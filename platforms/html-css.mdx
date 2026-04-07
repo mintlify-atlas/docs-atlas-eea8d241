@@ -1,0 +1,242 @@
+---
+title: 'HTML & CSS'
+description: 'Implement the Nothing design system on the web using CSS custom properties, Google Fonts, and native media queries.'
+---
+
+Use CSS custom properties for all tokens, `rem` for type sizes, `px` for spacing and borders. Dark mode is the default canvas. Light mode overrides via `prefers-color-scheme`.
+
+## Load fonts
+
+Add these tags to your HTML `<head>` before any stylesheets. All three families are required.
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+```
+
+## CSS custom properties
+
+Declare all tokens on `:root`. Dark mode values are the defaults.
+
+```css
+:root {
+  --black: #000000;
+  --surface: #111111;
+  --surface-raised: #1A1A1A;
+  --border: #222222;
+  --border-visible: #333333;
+  --text-disabled: #666666;
+  --text-secondary: #999999;
+  --text-primary: #E8E8E8;
+  --text-display: #FFFFFF;
+  --accent: #D71921;
+  --accent-subtle: rgba(215,25,33,0.15);
+  --success: #4A9E5C;
+  --warning: #D4A843;
+  --interactive: #5B9BF6;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+}
+```
+
+## Light mode
+
+Override the nine adaptive tokens inside a `prefers-color-scheme: light` media query. Accent and status colors are identical across modes — do not override them.
+
+```css
+@media (prefers-color-scheme: light) {
+  :root {
+    --black: #F5F5F5;
+    --surface: #FFFFFF;
+    --surface-raised: #F0F0F0;
+    --border: #E8E8E8;
+    --border-visible: #CCCCCC;
+    --text-disabled: #999999;
+    --text-secondary: #666666;
+    --text-primary: #1A1A1A;
+    --text-display: #000000;
+    --interactive: #007AFF;
+  }
+}
+```
+
+<Note>
+Accent red (`#D71921`), success, and warning are identical in both modes. Do not override them in the light media query.
+</Note>
+
+## Class-toggle alternative
+
+If you need manual mode switching (e.g. a user preference toggle), apply overrides to a `.light` class on `<html>` or `<body>` instead of using the media query.
+
+```css
+.light {
+  --black: #F5F5F5;
+  --surface: #FFFFFF;
+  --surface-raised: #F0F0F0;
+  --border: #E8E8E8;
+  --border-visible: #CCCCCC;
+  --text-disabled: #999999;
+  --text-secondary: #666666;
+  --text-primary: #1A1A1A;
+  --text-display: #000000;
+  --interactive: #007AFF;
+}
+```
+
+Toggle the class with JavaScript: `document.documentElement.classList.toggle('light')`.
+
+## Complete example: stat card with segmented progress bar
+
+A stat card displaying a numeric value and a three-segment progress bar using real token values.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing Design — Stat Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000000;
+      --surface: #111111;
+      --surface-raised: #1A1A1A;
+      --border: #222222;
+      --border-visible: #333333;
+      --text-disabled: #666666;
+      --text-secondary: #999999;
+      --text-primary: #E8E8E8;
+      --text-display: #FFFFFF;
+      --accent: #D71921;
+      --accent-subtle: rgba(215,25,33,0.15);
+      --success: #4A9E5C;
+      --warning: #D4A843;
+      --interactive: #5B9BF6;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+      --space-4xl: 96px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --black: #F5F5F5;
+        --surface: #FFFFFF;
+        --surface-raised: #F0F0F0;
+        --border: #E8E8E8;
+        --border-visible: #CCCCCC;
+        --text-disabled: #999999;
+        --text-secondary: #666666;
+        --text-primary: #1A1A1A;
+        --text-display: #000000;
+        --interactive: #007AFF;
+      }
+    }
+
+    body {
+      background-color: var(--black);
+      color: var(--text-primary);
+      font-family: "Space Grotesk", "DM Sans", system-ui, sans-serif;
+      margin: 0;
+      padding: var(--space-xl);
+    }
+
+    .stat-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border-visible);
+      border-radius: 4px;
+      padding: var(--space-lg);
+      max-width: 320px;
+    }
+
+    .stat-label {
+      font-family: "Space Mono", "JetBrains Mono", monospace;
+      font-size: 0.6875rem; /* 11px */
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-sm);
+    }
+
+    .stat-value {
+      font-family: "Doto", "Space Mono", monospace;
+      font-size: 3rem; /* 48px — display-lg */
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text-display);
+      margin: 0 0 var(--space-xs);
+    }
+
+    .stat-unit {
+      font-family: "Space Mono", "JetBrains Mono", monospace;
+      font-size: 0.6875rem; /* 11px — label */
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      vertical-align: super;
+    }
+
+    .stat-delta {
+      font-family: "Space Mono", "JetBrains Mono", monospace;
+      font-size: 0.75rem; /* 12px — caption */
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: var(--success);
+      margin: 0 0 var(--space-md);
+    }
+
+    .progress-track {
+      display: flex;
+      gap: 2px;
+      height: 4px;
+    }
+
+    .progress-segment {
+      flex: 1;
+      border-radius: 0; /* square ends — no radius */
+      background-color: var(--border-visible);
+    }
+
+    .progress-segment.filled-success { background-color: var(--success); }
+    .progress-segment.filled-warning { background-color: var(--warning); }
+    .progress-segment.filled-accent  { background-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="stat-card">
+    <p class="stat-label">Battery health</p>
+    <p class="stat-value">
+      87<span class="stat-unit">%</span>
+    </p>
+    <p class="stat-delta">↑ 2% since last cycle</p>
+    <div class="progress-track" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-segment filled-success"></div>
+      <div class="progress-segment filled-success"></div>
+      <div class="progress-segment filled-success"></div>
+      <div class="progress-segment filled-success"></div>
+      <div class="progress-segment filled-warning"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+The progress bar uses three segment states: `filled-success` (`#4A9E5C`) for healthy range, `filled-warning` (`#D4A843`) for the attention threshold, and `filled-accent` (`#D71921`) for over-limit. Unfilled segments use `--border-visible` (`#333333`). Color is applied to the value (`87`) and the segments — never to the label or the card background.

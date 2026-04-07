@@ -1,0 +1,240 @@
+---
+title: 'SwiftUI'
+description: 'Implement the Nothing design system in SwiftUI using Color extensions, font bundles, and environment-based mode switching.'
+---
+
+Register fonts in **Info.plist**, bundle `.ttf` files in your Xcode target, and use `@Environment(\.colorScheme)` to switch token values between dark and light modes at runtime.
+
+## Register fonts
+
+<Steps>
+  <Step title="Add .ttf files to your Xcode target">
+    Download the font files for Doto, Space Grotesk, and Space Mono. Add them to your Xcode project and confirm they are included in the app's **Target Membership**.
+  </Step>
+  <Step title="Declare fonts in Info.plist">
+    Open **Info.plist** and add a `Fonts provided by application` array. List each `.ttf` filename as a string entry.
+
+    ```xml
+    <key>UIAppFonts</key>
+    <array>
+      <string>Doto-Regular.ttf</string>
+      <string>SpaceGrotesk-Light.ttf</string>
+      <string>SpaceGrotesk-Regular.ttf</string>
+      <string>SpaceGrotesk-Medium.ttf</string>
+      <string>SpaceGrotesk-Bold.ttf</string>
+      <string>SpaceMono-Regular.ttf</string>
+      <string>SpaceMono-Bold.ttf</string>
+    </array>
+    ```
+  </Step>
+</Steps>
+
+## Color extension
+
+Copy this `Color` extension into your project. It maps every Nothing design token to a named static property. The `Color(hex:)` initializer is included — add it once to your codebase.
+
+```swift
+import SwiftUI
+
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex)
+        var rgbValue: UInt64 = 0
+        scanner.scanHexInt64(&rgbValue)
+        let r = Double((rgbValue & 0xFF0000) >> 16) / 255
+        let g = Double((rgbValue & 0x00FF00) >> 8) / 255
+        let b = Double(rgbValue & 0x0000FF) / 255
+        self.init(red: r, green: g, blue: b)
+    }
+
+    static let ndBlack        = Color(hex: "000000")
+    static let ndSurface      = Color(hex: "111111")
+    static let ndSurfaceRaised = Color(hex: "1A1A1A")
+    static let ndBorder       = Color(hex: "222222")
+    static let ndBorderVisible = Color(hex: "333333")
+    static let ndTextDisabled  = Color(hex: "666666")
+    static let ndTextSecondary = Color(hex: "999999")
+    static let ndTextPrimary   = Color(hex: "E8E8E8")
+    static let ndTextDisplay   = Color.white
+    static let ndAccent        = Color(hex: "D71921")
+    static let ndSuccess       = Color(hex: "4A9E5C")
+    static let ndWarning       = Color(hex: "D4A843")
+    static let ndInteractive   = Color(hex: "5B9BF6")
+}
+```
+
+## Font extension
+
+Use `.custom` with the exact PostScript name of each bundled font file.
+
+```swift
+import SwiftUI
+
+extension Font {
+    // Display — Doto only, 36pt and above
+    static func ndDisplay(_ size: CGFloat) -> Font {
+        .custom("Doto-Regular", size: size)
+    }
+
+    // Body / UI — Space Grotesk
+    static func ndBody(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        switch weight {
+        case .light:   return .custom("SpaceGrotesk-Light", size: size)
+        case .medium:  return .custom("SpaceGrotesk-Medium", size: size)
+        case .bold:    return .custom("SpaceGrotesk-Bold", size: size)
+        default:       return .custom("SpaceGrotesk-Regular", size: size)
+        }
+    }
+
+    // Data / Labels — Space Mono
+    static func ndMono(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        weight == .bold
+            ? .custom("SpaceMono-Bold", size: size)
+            : .custom("SpaceMono-Regular", size: size)
+    }
+}
+```
+
+## Mode switching
+
+Read `colorScheme` from the environment and select token values accordingly. Dark is the primary mode; light overrides swap the nine adaptive tokens.
+
+```swift
+@Environment(\.colorScheme) private var colorScheme
+
+var background: Color {
+    colorScheme == .dark ? .ndBlack : Color(hex: "F5F5F5")
+}
+
+var surface: Color {
+    colorScheme == .dark ? .ndSurface : .white
+}
+
+var textDisplay: Color {
+    colorScheme == .dark ? .ndTextDisplay : .ndBlack
+}
+
+var textPrimary: Color {
+    colorScheme == .dark ? .ndTextPrimary : Color(hex: "1A1A1A")
+}
+
+var textSecondary: Color {
+    colorScheme == .dark ? .ndTextSecondary : Color(hex: "666666")
+}
+
+var interactive: Color {
+    colorScheme == .dark ? Color(hex: "5B9BF6") : Color(hex: "007AFF")
+}
+```
+
+For the full dark/light token mapping, see [Color Tokens](/tokens/color).
+
+<Note>
+Accent (`#D71921`), success (`#4A9E5C`), and warning (`#D4A843`) are identical in both modes. Use `.ndAccent`, `.ndSuccess`, and `.ndWarning` directly without a colorScheme branch.
+</Note>
+
+## Complete example: stat widget view
+
+A SwiftUI view displaying a stat value, label, and segmented progress bar. Adapts automatically to dark and light mode via `@Environment(\.colorScheme)`.
+
+```swift
+import SwiftUI
+
+struct StatWidgetView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    let label: String
+    let value: String
+    let unit: String
+    let delta: String
+    /// Number of filled segments out of `totalSegments`
+    let filledSegments: Int
+    let totalSegments: Int = 8
+
+    private var backgroundColor: Color {
+        colorScheme == .dark ? .ndBlack : Color(hex: "F5F5F5")
+    }
+    private var cardColor: Color {
+        colorScheme == .dark ? .ndSurface : .white
+    }
+    private var borderColor: Color {
+        colorScheme == .dark ? .ndBorderVisible : Color(hex: "CCCCCC")
+    }
+    private var displayColor: Color {
+        colorScheme == .dark ? .ndTextDisplay : .ndBlack
+    }
+    private var secondaryColor: Color {
+        colorScheme == .dark ? .ndTextSecondary : Color(hex: "666666")
+    }
+
+    var body: some View {
+        ZStack {
+            backgroundColor.ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 0) {
+                // Label — Space Mono, ALL CAPS
+                Text(label.uppercased())
+                    .font(.ndMono(11))
+                    .tracking(11 * 0.08)
+                    .foregroundColor(secondaryColor)
+                    .padding(.bottom, 8)
+
+                // Value — Doto display
+                HStack(alignment: .firstTextBaseline, spacing: 2) {
+                    Text(value)
+                        .font(.ndDisplay(48))
+                        .foregroundColor(displayColor)
+                    Text(unit.uppercased())
+                        .font(.ndMono(11))
+                        .tracking(11 * 0.08)
+                        .foregroundColor(secondaryColor)
+                        .baselineOffset(20)
+                }
+                .padding(.bottom, 4)
+
+                // Delta
+                Text(delta)
+                    .font(.ndMono(12))
+                    .tracking(12 * 0.04)
+                    .foregroundColor(.ndSuccess)
+                    .padding(.bottom, 16)
+
+                // Segmented progress bar
+                HStack(spacing: 2) {
+                    ForEach(0..<totalSegments, id: \.self) { index in
+                        Rectangle() // square ends — no corner radius
+                            .frame(height: 4)
+                            .foregroundColor(segmentColor(for: index))
+                    }
+                }
+            }
+            .padding(24)
+            .background(cardColor)
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(borderColor, lineWidth: 1)
+            )
+            .frame(maxWidth: 320, alignment: .leading)
+        }
+    }
+
+    private func segmentColor(for index: Int) -> Color {
+        guard index < filledSegments else { return colorScheme == .dark ? .ndBorderVisible : Color(hex: "CCCCCC") }
+        let ratio = Double(filledSegments) / Double(totalSegments)
+        if ratio > 0.75 { return .ndSuccess }
+        if ratio > 0.5  { return .ndWarning }
+        return .ndAccent
+    }
+}
+
+#Preview {
+    StatWidgetView(
+        label: "Battery health",
+        value: "87",
+        unit: "%",
+        delta: "↑ 2% since last cycle",
+        filledSegments: 7
+    )
+}
+```
+
+The segment color derives from fill ratio: above 75% uses `ndSuccess`, above 50% uses `ndWarning`, below 50% uses `ndAccent`. This matches the data status color rule — color the value, not the container.

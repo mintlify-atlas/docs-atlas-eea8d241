@@ -1,0 +1,64 @@
+---
+title: 'Design Principles'
+description: 'The six core principles that define the Nothing design language, and the vibe that runs through every decision.'
+---
+
+The Nothing design language is rooted in industrial and Swiss typographic traditions — Braun, Teenage Engineering, the International Style. Every principle below is a constraint that forces clarity, not a rule that limits creativity.
+
+## The six principles
+
+### 1. Subtract, don't add
+
+Every element must earn its pixel. The first instinct when something feels off should always be removal, not addition. More contrast, more breathing room, more whitespace — never more decoration. A design is finished not when there is nothing left to add, but when there is nothing left to remove.
+
+### 2. Structure is ornament
+
+The grid, the hierarchy, the data itself — these are the visual language. You don't need decorative flourishes when the architecture of information is well-composed. Expose the structure. Let aligned columns, deliberate spacing, and typographic contrast carry the aesthetic weight that other systems bury under gradients and icons.
+
+### 3. Monochrome is the canvas
+
+Color is an event, not a default. In the Nothing system, the gray scale handles all hierarchy and all relationships. Color appears only when it has semantic meaning: red for an interrupt, green for success, amber for a warning. When nothing is urgent, nothing is colored. This constraint makes color land with full force when it does appear.
+
+### 4. Type does the heavy lifting
+
+Scale, weight, and spacing create hierarchy — not color, not icons, not borders. A 72px Space Mono number next to a 12px Space Mono label in `--text-secondary` communicates a complete story without a single graphic element. Reach for typography before reaching for anything else.
+
+### 5. Both modes are first-class
+
+Dark mode uses OLED black. Light mode uses warm off-white. Neither is derived from the other by flipping values — both receive full design attention from the start. Before beginning any design, ask which mode to start in. The answer shapes every subsequent decision.
+
+### 6. Industrial warmth
+
+The system is technical and precise, but never clinical. A human hand must be felt in the choices: the slight warmth of the off-white background, the deliberate imprecision of a dot-matrix headline, the single expressive moment on an otherwise austere screen. Precision in service of people, not precision for its own sake.
+
+---
+
+## The Nothing vibe
+
+These six descriptors define the character beneath the rules — the feel that should be recognizable across every screen, even when the exact implementation differs.
+
+<AccordionGroup>
+  <Accordion title="Confidence through emptiness">
+    Large, uninterrupted background areas are a design choice, not an oversight. Resist the impulse to fill space. Empty space communicates confidence — the design is complete because everything unnecessary has already been removed.
+  </Accordion>
+
+  <Accordion title="Precision in the small things">
+    Letter-spacing, exact gray values, 4px gaps. The micro-decisions compound into craft. A design can follow all the high-level rules and still feel wrong if the details are approximate. Commit to exactness: `--text-secondary` at 60%, not "somewhere around 60%."
+  </Accordion>
+
+  <Accordion title="Data as beauty">
+    `36GB/s` in Space Mono at 48px is the visual. No illustration needed, no icon, no supporting graphic. When data is well-typeset and given room to breathe, it becomes the aesthetic object. Trust the numbers.
+  </Accordion>
+
+  <Accordion title="Mechanical honesty">
+    Controls look like controls. A toggle looks like a physical switch. A gauge looks like an instrument. Nothing in the Nothing system pretends to be something it isn't. Every interactive element signals its behavior through its form.
+  </Accordion>
+
+  <Accordion title="One moment of surprise">
+    A dot-matrix headline. A circular widget in a grid of rectangles. A single red dot. Restraint is what makes the one expressive moment powerful. If everything is surprising, nothing is. Identify the one break per screen and protect it.
+  </Accordion>
+
+  <Accordion title="Percussive, not fluid">
+    Imagine the UI has a sound: click, not swoosh. Tick, not chime. Transitions are mechanical and precise — subtle ease-out at most. There is no spring, no bounce, no inertia. Every state change is deliberate and immediate.
+  </Accordion>
+</AccordionGroup>

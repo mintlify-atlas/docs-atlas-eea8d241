@@ -1,0 +1,132 @@
+---
+title: 'Spacing & Motion Tokens'
+description: 'Spacing scale, semantic spacing levels, motion tokens, iconography specs, and the dot-matrix motif for the Nothing design system.'
+---
+
+Spacing is the primary tool for communicating relationships between elements. In the Nothing design system, proximity replaces most other grouping mechanisms — borders, backgrounds, and dividers are last resorts, not defaults.
+
+## Spacing scale
+
+All spacing is built on an 8px base. The full scale runs from 2px optical adjustments to 96px hero breathing room.
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--space-2xs` | 2px | Optical adjustments only |
+| `--space-xs` | 4px | Icon-to-label gaps, tight padding |
+| `--space-sm` | 8px | Component internal spacing |
+| `--space-md` | 16px | Standard padding, element gaps |
+| `--space-lg` | 24px | Group separation |
+| `--space-xl` | 32px | Section margins |
+| `--space-2xl` | 48px | Major section breaks |
+| `--space-3xl` | 64px | Page-level vertical rhythm |
+| `--space-4xl` | 96px | Hero breathing room |
+
+## Spacing as meaning
+
+The four semantic levels map directly onto visual relationships. The amount of space between two elements communicates whether they belong together, belong to the same group, or are entirely separate.
+
+```
+Tight (4–8px)    = "These belong together"     (icon + label, number + unit)
+Medium (16px)    = "Same group, different items" (list items, form fields)
+Wide (32–48px)   = "New group starts here"      (section breaks)
+Vast (64–96px)   = "This is a new context"      (hero to content, major divisions)
+```
+
+<Tip>
+If you find yourself reaching for a divider line, the spacing is probably wrong. Dividers are a symptom of insufficient spacing contrast. Use them only in data-dense lists where items are structurally identical. Add distance instead of decoration.
+</Tip>
+
+## Grid and layout
+
+The grid is built on an 8px base unit. All spacing tokens are multiples or half-multiples of 8px (`--space-2xs` at 2px and `--space-xs` at 4px are the only sub-8px values, reserved for optical micro-adjustments).
+
+Use `--space-md` (16px) as your default padding inside components. Use `--space-lg` (24px) to separate groups within a section. Use `--space-xl` or larger (32px+) to open a new section.
+
+<Note>
+`--space-2xs` (2px) is for optical corrections only — adjusting perceived alignment between type baselines and borders. It should not appear in layout logic.
+</Note>
+
+## Motion tokens
+
+### Duration
+
+| Context | Range | Examples |
+|---------|-------|---------|
+| Micro-interactions | 150–250ms | Button press, toggle state, icon swap |
+| Transitions | 300–400ms | Screen enter/exit, panel open/close |
+
+### Easing
+
+Use a single easing curve across the entire system:
+
+```css
+animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+```
+
+This is a subtle ease-out. It starts slightly faster and settles — mechanical, not bouncy.
+
+### Motion rules
+
+- **Prefer opacity over position.** Elements fade in and out; they do not slide unless moving between explicitly spatial contexts.
+- **Hover states:** border and text brighten. No scale transform, no box-shadow.
+- **No spring or bounce easing.** The timing curve above is the only easing in the system.
+- **No parallax, scroll-jacking, or gratuitous animation.** If the motion does not communicate state or guide attention, remove it.
+
+<Warning>
+Do not use `transform: scale()` on hover. Do not use `box-shadow`. Do not use spring or elastic easing functions. Motion in this system is percussive and precise — think click, not swoosh.
+</Warning>
+
+## Iconography specs
+
+All icons in the Nothing design system follow a strict monoline specification:
+
+| Property | Value |
+|----------|-------|
+| Stroke width | 1.5px |
+| Fill | None |
+| Canvas size | 24×24px |
+| Live area | 20×20px |
+| Cap / join style | Round |
+| Color | Inherits current text color |
+| Preferred libraries | Lucide (thin), Phosphor (thin) |
+| Maximum strokes | 5–6 per icon |
+
+<Warning>
+Never use filled icons, multi-color icons, or emoji as UI elements. Icons must be single-color and monoline. The icon color always inherits from the surrounding text context — do not set icon colors independently.
+</Warning>
+
+## Dot-matrix motif
+
+The dot-matrix grid is the Nothing design system's one expressive ornament. It references the dot-matrix display technology at the core of Nothing's physical product identity.
+
+### When to use
+
+- Hero typography set in Doto
+- Decorative grid backgrounds behind hero sections
+- Dot-grid data visualizations
+- Loading indicators
+- Empty state illustrations
+
+Do not use the dot-matrix motif as a container border or as a button style.
+
+### CSS implementation
+
+Two variants cover most use cases. Use `dot-grid` where the dots should be visible as a design element. Use `dot-grid-subtle` for background texture that should not compete with content.
+
+```css
+.dot-grid {
+  background-image: radial-gradient(circle, var(--border-visible) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.dot-grid-subtle {
+  background-image: radial-gradient(circle, var(--border) 0.5px, transparent 0.5px);
+  background-size: 12px 12px;
+}
+```
+
+Dot size: 1–2px. Grid pitch: 12–16px uniform. For background use, set opacity to 0.1–0.2. For data visualizations where dots encode information, use full opacity.
+
+<Tip>
+The dot-matrix motif is the single "moment of surprise" in an otherwise restrained system. Use it in exactly one place per screen. Restraint is what makes it powerful — if every screen has a dot-grid background, none of them do.
+</Tip>

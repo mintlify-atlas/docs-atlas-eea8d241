@@ -1,0 +1,125 @@
+---
+title: 'Color Tokens'
+description: 'Primary palette, dark/light mode mapping, accent and status colors, and CSS variable declarations for the Nothing design system.'
+---
+
+The Nothing design system is monochromatic by default. Color is an event — a signal — not a decorative default. The gray scale carries hierarchy. Accent and status colors carry meaning. Nothing else gets color.
+
+## Primary palette (dark mode)
+
+Nine tokens cover the full range from OLED black to pure white. Contrast ratios are measured against `#000000`.
+
+| Token | Hex | Contrast on #000 | Role |
+|-------|-----|-------------------|------|
+| `--black` | `#000000` | — | Primary background (OLED) |
+| `--surface` | `#111111` | 1.3:1 | Elevated surfaces, cards |
+| `--surface-raised` | `#1A1A1A` | 1.5:1 | Secondary elevation |
+| `--border` | `#222222` | — | Subtle dividers (decorative only) |
+| `--border-visible` | `#333333` | — | Intentional borders, wireframe lines |
+| `--text-disabled` | `#666666` | 4.0:1 | Disabled text, decorative elements |
+| `--text-secondary` | `#999999` | 6.3:1 | Labels, captions, metadata |
+| `--text-primary` | `#E8E8E8` | 16.5:1 | Body text |
+| `--text-display` | `#FFFFFF` | 21:1 | Headlines, hero numbers |
+
+The gray scale is the hierarchy. Dark mode reads like an instrument panel in a dark room: OLED black, white data glowing.
+
+## Dark / light mode mapping
+
+All nine primary tokens adapt between modes. The values invert conceptually but the roles stay identical — `--text-display` is always the highest-contrast text regardless of mode.
+
+| Token | Dark | Light |
+|-------|------|-------|
+| `--black` | `#000000` | `#F5F5F5` |
+| `--surface` | `#111111` | `#FFFFFF` |
+| `--surface-raised` | `#1A1A1A` | `#F0F0F0` |
+| `--border` | `#222222` | `#E8E8E8` |
+| `--border-visible` | `#333333` | `#CCCCCC` |
+| `--text-disabled` | `#666666` | `#999999` |
+| `--text-secondary` | `#999999` | `#666666` |
+| `--text-primary` | `#E8E8E8` | `#1A1A1A` |
+| `--text-display` | `#FFFFFF` | `#000000` |
+| `--interactive` | `#5B9BF6` | `#007AFF` |
+
+**Identical across both modes:** accent red, all status colors, ALL CAPS label treatment, fonts, type scale, spacing, and component shapes.
+
+Light mode reads like a printed technical manual: off-white paper (`#F5F5F5`), black ink. Cards use `#FFFFFF` on the off-white page, creating subtle elevation without shadows.
+
+## Accent and status colors
+
+These tokens are mode-invariant — the same hex value in dark and light.
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--accent` | `#D71921` | Signal light: active states, destructive actions, urgent alerts. One per screen as a UI element. Never decorative. |
+| `--accent-subtle` | `rgba(215,25,33,0.15)` | Accent tint backgrounds |
+| `--success` | `#4A9E5C` | Confirmed, completed, connected |
+| `--warning` | `#D4A843` | Caution, pending, degraded |
+| `--error` | `#D71921` | Shares accent red — errors ARE the accent moment |
+| `--info` | `#999999` | Uses secondary text color |
+| `--interactive` | `#007AFF` / `#5B9BF6` | Tappable text: links, picker values. Not for buttons. |
+
+### How to apply data status colors
+
+When color-coding data values, apply color to the **value itself**. Labels stay `--text-secondary`. Row backgrounds stay unchanged.
+
+```
+--success  → good / in range
+--warning  → moderate / needs attention
+--accent   → bad / over limit
+--text-primary → neutral
+```
+
+Trend arrows (up/down indicators) inherit the same color as the value they accompany.
+
+<Note>
+Color the value, not the label or the background. A row with a red background is a notification pattern — not a data-status pattern. In Nothing design, the data glows; the container stays dark.
+</Note>
+
+### Red is not hierarchy — it is an interrupt
+
+`#D71921` sits outside the gray-scale hierarchy entirely. It means: "look here, now." It is not a level of importance between secondary and primary text — it is a category break.
+
+Use red only when something genuinely demands immediate attention: an active error, a destructive confirmation, an urgent threshold breach. If nothing on the screen is urgent, there is no red on the screen. One red element per screen maximum.
+
+<Warning>
+Never use `--accent` as a decorative color, a brand highlight, or a way to make a section "feel important." Red placed without urgency trains users to ignore it.
+</Warning>
+
+### Interactive color
+
+`--interactive` (`#007AFF` in light, `#5B9BF6` in dark) is reserved for tappable text: hyperlinks and picker values that the user can tap to change. It is not a button color. Buttons in this system use surface and border tokens, not blue.
+
+## CSS variables — full dark mode declaration
+
+Copy this `:root` block as the starting point for any web implementation. The dark mode values are the defaults; override with `prefers-color-scheme: light` or a `.light` class toggle.
+
+```css
+:root {
+  --black: #000000;
+  --surface: #111111;
+  --surface-raised: #1A1A1A;
+  --border: #222222;
+  --border-visible: #333333;
+  --text-disabled: #666666;
+  --text-secondary: #999999;
+  --text-primary: #E8E8E8;
+  --text-display: #FFFFFF;
+  --accent: #D71921;
+  --accent-subtle: rgba(215,25,33,0.15);
+  --success: #4A9E5C;
+  --warning: #D4A843;
+  --interactive: #5B9BF6;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+}
+```
+
+<Tip>
+The `--error` token is not listed separately in the CSS variables because it shares the same value as `--accent`. Reference `--accent` in your error states directly — this makes the semantic link between errors and the accent moment explicit in your code.
+</Tip>

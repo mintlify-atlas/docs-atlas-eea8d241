@@ -1,0 +1,241 @@
+---
+title: 'React & Tailwind'
+description: 'Implement the Nothing design system in React with Tailwind CSS using CSS custom properties and arbitrary value syntax.'
+---
+
+Set up Nothing design tokens as CSS custom properties in a global stylesheet, then reference them in Tailwind using arbitrary value syntax. No plugin required.
+
+## Set up CSS custom properties
+
+Create or open your global CSS file (commonly `globals.css` or `index.css`) and declare all tokens on `:root`. Dark mode values are the defaults. Light mode overrides go inside a `prefers-color-scheme: light` media query.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --black: #000000;
+  --surface: #111111;
+  --surface-raised: #1A1A1A;
+  --border: #222222;
+  --border-visible: #333333;
+  --text-disabled: #666666;
+  --text-secondary: #999999;
+  --text-primary: #E8E8E8;
+  --text-display: #FFFFFF;
+  --accent: #D71921;
+  --accent-subtle: rgba(215,25,33,0.15);
+  --success: #4A9E5C;
+  --warning: #D4A843;
+  --interactive: #5B9BF6;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --black: #F5F5F5;
+    --surface: #FFFFFF;
+    --surface-raised: #F0F0F0;
+    --border: #E8E8E8;
+    --border-visible: #CCCCCC;
+    --text-disabled: #999999;
+    --text-secondary: #666666;
+    --text-primary: #1A1A1A;
+    --text-display: #000000;
+    --interactive: #007AFF;
+  }
+}
+```
+
+Import this file at the entry point of your app — for example in `main.tsx` or `_app.tsx`.
+
+## Using tokens with Tailwind
+
+Tailwind's arbitrary value syntax lets you reference any CSS variable directly in a class name. No `tailwind.config` changes are needed.
+
+```tsx
+// Color
+<p className="text-[var(--text-display)]">87%</p>
+<div className="bg-[var(--surface)] border border-[var(--border-visible)]">...</div>
+
+// Spacing
+<div className="p-[var(--space-lg)] gap-[var(--space-sm)]">...</div>
+
+// Font families
+<p className="font-['Space_Mono']">LABEL TEXT</p>
+<p className="font-['Space_Grotesk']">Body copy</p>
+<span className="font-['Doto']">48</span>
+```
+
+<Note>
+Tailwind requires underscores in place of spaces inside arbitrary values for font families: `font-['Space_Grotesk']` not `font-['Space Grotesk']`.
+</Note>
+
+## TypeScript types for theme modes
+
+Define a `Theme` type for mode-aware components. Pass it as a prop or read it from a context.
+
+```tsx
+export type ThemeMode = 'dark' | 'light';
+
+export interface ThemeContext {
+  mode: ThemeMode;
+  toggle: () => void;
+}
+```
+
+For class-toggle mode switching (manual override, ignoring `prefers-color-scheme`), apply a `light` class to the root element and add the corresponding overrides to your CSS:
+
+```css
+.light {
+  --black: #F5F5F5;
+  --surface: #FFFFFF;
+  --surface-raised: #F0F0F0;
+  --border: #E8E8E8;
+  --border-visible: #CCCCCC;
+  --text-disabled: #999999;
+  --text-secondary: #666666;
+  --text-primary: #1A1A1A;
+  --text-display: #000000;
+  --interactive: #007AFF;
+}
+```
+
+```tsx
+function toggleTheme(mode: ThemeMode): ThemeMode {
+  const next: ThemeMode = mode === 'dark' ? 'light' : 'dark';
+  document.documentElement.classList.toggle('light', next === 'light');
+  return next;
+}
+```
+
+## Complete example: dashboard stat card
+
+A typed React component using Tailwind arbitrary values to apply Nothing design tokens. No inline styles.
+
+```tsx
+import type { FC } from 'react';
+
+interface StatCardProps {
+  label: string;
+  value: string;
+  unit: string;
+  delta: string;
+  /** Number of filled segments out of 8 */
+  filledSegments: number;
+}
+
+type SegmentStatus = 'success' | 'warning' | 'accent' | 'empty';
+
+function segmentStatus(index: number, filled: number, total: number): SegmentStatus {
+  if (index >= filled) return 'empty';
+  const ratio = filled / total;
+  if (ratio > 0.75) return 'success';
+  if (ratio > 0.5)  return 'warning';
+  return 'accent';
+}
+
+const segmentColors: Record<SegmentStatus, string> = {
+  success: 'bg-[var(--success)]',
+  warning: 'bg-[var(--warning)]',
+  accent:  'bg-[var(--accent)]',
+  empty:   'bg-[var(--border-visible)]',
+};
+
+const TOTAL_SEGMENTS = 8;
+
+const StatCard: FC<StatCardProps> = ({ label, value, unit, delta, filledSegments }) => {
+  return (
+    <div className="
+      bg-[var(--surface)]
+      border border-[var(--border-visible)]
+      rounded-sm
+      p-[var(--space-lg)]
+      max-w-[320px]
+      w-full
+    ">
+      {/* Label — Space Mono, ALL CAPS */}
+      <p className="
+        font-['Space_Mono']
+        text-[11px] leading-[1.2] tracking-[0.08em]
+        uppercase
+        text-[var(--text-secondary)]
+        mb-[var(--space-sm)]
+      ">
+        {label}
+      </p>
+
+      {/* Value — Doto display */}
+      <div className="flex items-baseline gap-[var(--space-xs)] mb-[var(--space-xs)]">
+        <span className="
+          font-['Doto']
+          text-[48px] leading-[1.05] tracking-[-0.02em]
+          text-[var(--text-display)]
+        ">
+          {value}
+        </span>
+        <span className="
+          font-['Space_Mono']
+          text-[11px] tracking-[0.08em]
+          uppercase
+          text-[var(--text-secondary)]
+          self-start mt-[6px]
+        ">
+          {unit}
+        </span>
+      </div>
+
+      {/* Delta */}
+      <p className="
+        font-['Space_Mono']
+        text-[12px] leading-[1.4] tracking-[0.04em]
+        text-[var(--success)]
+        mb-[var(--space-md)]
+      ">
+        {delta}
+      </p>
+
+      {/* Segmented progress bar */}
+      <div
+        className="flex gap-[2px]"
+        role="progressbar"
+        aria-valuenow={filledSegments}
+        aria-valuemin={0}
+        aria-valuemax={TOTAL_SEGMENTS}
+      >
+        {Array.from({ length: TOTAL_SEGMENTS }, (_, i) => (
+          <div
+            key={i}
+            className={`
+              flex-1 h-[4px] rounded-none
+              ${segmentColors[segmentStatus(i, filledSegments, TOTAL_SEGMENTS)]}
+            `}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default StatCard;
+```
+
+Usage:
+
+```tsx
+<StatCard
+  label="Battery health"
+  value="87"
+  unit="%"
+  delta="↑ 2% since last cycle"
+  filledSegments={7}
+/>
+```
+
+Segment color is computed from the fill ratio — not hardcoded per segment. This keeps the component data-driven: pass a new `filledSegments` value and the color treatment updates automatically, consistent with the data status rules in [Color Tokens](/tokens/color).

@@ -1,0 +1,54 @@
+---
+title: "Installation"
+description: "Install the Nothing Design Skill into Claude Code in two commands."
+---
+
+## Prerequisites
+
+- [Claude Code](https://claude.ai/code) installed and working on your machine
+
+## Install the skill
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the Nothing Design Skill repo to your local machine:
+
+    ```bash
+    git clone https://github.com/dominikmartn/nothing-design-skill.git
+    ```
+  </Step>
+  <Step title="Copy the skill folder">
+    Copy the `nothing-design` folder into your Claude Code skills directory:
+
+    ```bash
+    cp -r nothing-design-skill/nothing-design ~/.claude/skills/
+    ```
+
+    Claude Code reads skills from `~/.claude/skills/`. After copying, the directory should look like this:
+
+    ```
+    ~/.claude/skills/
+    └── nothing-design/
+        ├── SKILL.md
+        └── references/
+            ├── tokens.md
+            ├── components.md
+            └── platform-mapping.md
+    ```
+  </Step>
+  <Step title="Restart Claude Code">
+    Quit and reopen Claude Code. Skills are loaded at startup, so a restart is required for the skill to become available.
+  </Step>
+</Steps>
+
+## Verify the skill is available
+
+After restarting, open a Claude Code session and type `/nothing-design`. Claude should acknowledge the skill and begin the Nothing design workflow — declaring required Google Fonts and asking which mode (dark or light) you want to start with.
+
+<Tip>
+  You can also trigger the skill by saying "Nothing style" or "Nothing design" in natural language. The slash command and natural language triggers behave identically.
+</Tip>
+
+<Note>
+  The skill only activates on explicit trigger. It will never start automatically for a generic UI or design request. You must say "Nothing style", "Nothing design", or `/nothing-design` to activate it.
+</Note>

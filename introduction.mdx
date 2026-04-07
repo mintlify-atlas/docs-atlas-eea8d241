@@ -1,0 +1,58 @@
+---
+title: "Introduction"
+description: "What the Nothing Design Skill is, why it exists, and what's included."
+---
+
+The Nothing Design Skill is a reusable skill for [Claude Code](https://claude.ai/code) that generates UI in the Nothing design language — monochrome, typographic, and industrial. Instead of describing the same design rules every session, you install the skill once and trigger it on demand.
+
+## The problem it solves
+
+Every time you ask Claude to build a UI, you start from scratch. You re-explain the font stack, the gray scale, the spacing rhythm, the rule against gradients and shadows. The Nothing Design Skill packages those rules into a persistent, versioned skill file that Claude reads automatically when you activate it.
+
+## Core philosophy
+
+The Nothing design language is built on three convictions:
+
+- **Monochrome is the canvas.** Color is an event, not a default. The entire gray scale — from OLED black (`#000000`) to pure white (`#FFFFFF`) — is the palette. Red (`#D71921`) appears once per screen, as an interrupt signal.
+- **Type does the heavy lifting.** Scale, weight, and spacing communicate hierarchy. Not color, not icons, not borders.
+- **Industrial warmth.** The aesthetic is technical and precise — instrument panels, printed manuals — but never cold. A human hand should be felt in the composition.
+
+Both dark mode and light mode are first-class. Dark mode is an instrument panel in a dark room. Light mode is a printed technical manual. Neither is derived from the other.
+
+## What's included
+
+The skill ships four files:
+
+| File | Contents |
+|------|----------|
+| `SKILL.md` | Design philosophy, craft rules, anti-patterns, and the seven-step workflow Claude follows |
+| `references/tokens.md` | Font stack, type scale, color system (dark + light), spacing scale, motion specs, dot-matrix motif |
+| `references/components.md` | Buttons, cards, inputs, lists, tables, overlays, segmented progress bars, charts, and state patterns |
+| `references/platform-mapping.md` | Output conventions for HTML/CSS, SwiftUI, and React/Tailwind |
+
+## How it integrates with Claude Code
+
+Claude Code supports custom skills — markdown files that load into Claude's context when triggered. The Nothing Design Skill uses Claude Code's native skill system: copy the `nothing-design` folder into `~/.claude/skills/`, and the skill becomes available in every Claude Code session.
+
+<Note>
+  The skill only activates when you explicitly say "Nothing style", "Nothing design", or `/nothing-design`. It will never trigger automatically for generic UI or design tasks.
+</Note>
+
+The skill instructs Claude to follow a seven-step workflow: declare fonts, ask which mode (dark or light), sketch the three-layer hierarchy, compose using the craft rules, check tokens for exact values, build components from the component library, and adapt output to your target platform.
+
+## Explore the skill
+
+<CardGroup cols={2}>
+  <Card title="Design Philosophy" icon="compass" href="/philosophy/principles">
+    The six principles and craft rules that define the Nothing design language.
+  </Card>
+  <Card title="Tokens" icon="palette" href="/tokens/typography">
+    Exact font stacks, color values for dark and light mode, spacing scale, and motion specs.
+  </Card>
+  <Card title="Components" icon="square" href="/components/layout-surfaces">
+    Every UI pattern — buttons, cards, segmented progress bars, mechanical toggles, and more.
+  </Card>
+  <Card title="Platform Output" icon="code" href="/platforms/html-css">
+    How the skill maps design tokens to HTML/CSS, SwiftUI, and React/Tailwind.
+  </Card>
+</CardGroup>

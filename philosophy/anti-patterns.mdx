@@ -1,0 +1,105 @@
+---
+title: 'Anti-Patterns'
+description: 'What to never do in the Nothing design language — and why each violation breaks the system.'
+---
+
+Every item on this page is banned — not as a stylistic preference, but because it contradicts the principles that make the Nothing design language work. Understand the reason behind each prohibition so you can apply the spirit of the rule, not just the letter.
+
+---
+
+## Visual effects
+
+<Warning>
+**No gradients in UI chrome.**
+Gradients imply a light source and depth — they are the visual language of skeuomorphism. Nothing surfaces are flat. Depth is communicated through border separation, spacing, and gray scale, not by simulating how light falls on a curved object.
+</Warning>
+
+<Warning>
+**No shadows. No blur. Flat surfaces, border separation.**
+Shadows add visual weight without semantic meaning. In the Nothing system, layers are separated by borders, not by depth effects. A blurred background behind a modal is visual noise that competes with the content. A crisp border says "these are two distinct surfaces" with precision.
+</Warning>
+
+---
+
+## UI patterns
+
+<Warning>
+**No toast popups.**
+Toast notifications interrupt the user from outside the flow of interaction. Nothing uses inline status text instead: `[SAVED]`, `[ERROR: connection lost]`. The status appears exactly where the action occurred, at zero visual cost to the rest of the screen.
+</Warning>
+
+<Warning>
+**No skeleton loading screens.**
+Skeleton screens are a visual approximation of content that isn't there. They are elaborate decorations for a failure state. Nothing replaces them with `[LOADING...]` text or a segmented spinner — honest, minimal, functional.
+</Warning>
+
+<Warning>
+**No sad-face illustrations, cute mascots, or multi-paragraph empty states.**
+Empty states that deploy illustration or character design are an acknowledgment that the design failed to communicate. In Nothing, an empty state is text — direct, precise, and unsentimental. "No data for this period." Done.
+</Warning>
+
+<Warning>
+**No zebra striping in tables.**
+Alternating row backgrounds are a legacy pattern from low-resolution displays where alignment was hard to track. In a well-typeset table with correct spacing and column alignment, zebra striping is visual noise. Use spacing and a thin border to separate rows when density demands it.
+</Warning>
+
+---
+
+## Typography and iconography
+
+<Warning>
+**No filled icons.**
+Filled icons carry weight that competes with typography. Nothing uses outline icons only. They sit in the background as navigational cues, never as decorative objects.
+</Warning>
+
+<Warning>
+**No multi-color icons.**
+Multi-color icons introduce uncontrolled color into a monochrome system. Every icon must be a single tone — `--text-secondary` for inactive, `--text-primary` for active.
+</Warning>
+
+<Warning>
+**No emoji as UI.**
+Emoji are designed for communication between people, not for interface hierarchy. Using a 🎉 in a success state or a 🔴 as a status indicator imports a visual vocabulary that conflicts with the Nothing language. Use status colors and text labels instead.
+</Warning>
+
+---
+
+## Animation
+
+<Warning>
+**No parallax and no scroll-jacking.**
+Parallax and scroll manipulation prioritize spectacle over utility. They disorient users who rely on scroll position for spatial orientation. Nothing interfaces are direct — scrolling moves content, not a cinematic experience.
+</Warning>
+
+<Warning>
+**No gratuitous animation.**
+Animation in Nothing is purposeful: it conveys state change, not personality. If an animation does not help the user understand what happened, it does not belong. The bar for inclusion is high.
+</Warning>
+
+<Warning>
+**No spring or bounce easing. Use subtle ease-out only.**
+Spring and bounce physics evoke softness, elasticity, and playfulness — qualities that are antithetical to the Nothing vibe. Recall the sound principle: click, not swoosh. Transitions are mechanical and precise. `ease-out` with a short duration (100–200ms) is the only acceptable easing curve.
+</Warning>
+
+---
+
+## Layout
+
+<Warning>
+**No border-radius greater than 16px on cards.**
+Aggressive rounding softens corners to the point of appearing inflated or toy-like. Nothing cards use sharp-to-moderate radii: 4–8px for technical components, up to 16px for cards. Buttons follow a separate rule — pill shape (`border-radius: 999px`) for primary actions, or 4–8px for technical/secondary buttons.
+</Warning>
+
+---
+
+## Data visualization
+
+<Warning>
+**Differentiate data series with opacity or pattern before introducing color.**
+Introducing multiple colors into a chart creates a hierarchy problem — now you have color doing work outside its semantic role. Before reaching for color, try:
+
+1. Opacity levels — 100%, 60%, 30% of the same base color
+2. Pattern fill — solid, striped, dotted
+
+Color may be used for data encoding when opacity and pattern are insufficient, but it should be the last tool you reach for, not the first.
+</Warning>

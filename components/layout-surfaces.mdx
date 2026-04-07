@@ -1,0 +1,294 @@
+---
+title: "Layout & Surfaces"
+description: "Cards, navigation, and overlay components in the Nothing design language."
+---
+
+Nothing UI is built on flat surfaces separated by contrast and borders — never shadows. Every layer gets a slightly lighter background token, and borders make structure legible without depth tricks.
+
+## Cards / Surfaces
+
+Cards use one of two background tokens depending on their elevation context:
+
+| Property | Value |
+|----------|-------|
+| Background | `--surface` (`#111111`) or `--surface-raised` (`#1A1A1A`) |
+| Border | `1px solid --border` (`#222222`), or none |
+| Padding | `16–24px` |
+| Shadows | None — flat surfaces only, border separation |
+
+### Radius variants
+
+| Variant | Radius | Use |
+|---------|--------|-----|
+| Card | `12–16px` | Standard content cards, dashboard widgets |
+| Compact | `8px` | Inline panels, secondary surfaces |
+| Technical | `4px` | Data tables, code panels, instrument readouts |
+
+<Note>
+  Never add `box-shadow` to any surface. Depth comes from background contrast: `--black` → `--surface` → `--surface-raised`.
+</Note>
+
+### CSS implementation
+
+```css card-surface.css
+/* Standard card */
+.card {
+  background: var(--surface);        /* #111111 */
+  border: 1px solid var(--border);   /* #222222 */
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* Compact card */
+.card--compact {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Technical/data card */
+.card--technical {
+  background: var(--surface-raised); /* #1A1A1A */
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+}
+```
+
+---
+
+## Navigation
+
+Nothing navigation uses a typographic label system — no icons, no filled backgrounds on active items. Labels are always Space Mono ALL CAPS, making the navigation read like an instrument panel header row.
+
+### Layout by breakpoint
+
+| Breakpoint | Pattern |
+|------------|---------|
+| Mobile | Bottom bar with 3–5 items |
+| Desktop | Horizontal text bar, full-width |
+
+### Label treatment
+
+| State | Color | Style |
+|-------|-------|-------|
+| Active | `--text-display` (`#FFFFFF`) | Space Mono ALL CAPS + dot or underline indicator |
+| Inactive | `--text-disabled` (`#666666`) | Space Mono ALL CAPS, no decoration |
+
+### Separator styles
+
+Two bracket/separator patterns are valid:
+
+- **Bracket style:** `[ HOME ]  GALLERY  INFO` — active item wrapped in square brackets
+- **Pipe style:** `HOME | GALLERY | INFO` — items separated by `|` dividers
+
+Choose one separator style per project and apply it consistently throughout.
+
+### Back button
+
+| Property | Value |
+|----------|-------|
+| Shape | Circular |
+| Size | `40–44px` |
+| Background | `--surface` (`#111111`) |
+| Icon | Thin chevron `<` |
+| Position | Top-left, `16px` from both edges |
+
+### CSS implementation
+
+```css navigation.css
+/* Navigation bar */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border); /* #222222 */
+}
+
+.nav-item {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-disabled); /* #666666 */
+  text-decoration: none;
+}
+
+/* Bracket active style */
+.nav-item--active::before { content: "[ "; }
+.nav-item--active::after  { content: " ]"; }
+.nav-item--active {
+  color: var(--text-display); /* #FFFFFF */
+}
+
+/* Back button */
+.back-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);       /* #111111 */
+  border: 1px solid var(--border);  /* #222222 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  cursor: pointer;
+}
+```
+
+---
+
+## Overlays & Layering
+
+Nothing has no shadows. Layering is achieved exclusively through background contrast and borders. The hierarchy is: `--black` base → `--surface` elevated → `--surface-raised` highest.
+
+### Modals
+
+| Property | Value |
+|----------|-------|
+| Backdrop | `rgba(0, 0, 0, 0.8)` |
+| Dialog background | `--surface` (`#111111`) |
+| Dialog border | `1px solid --border-visible` (`#333333`) |
+| Dialog radius | `16px` |
+| Max width | `480px` |
+| Position | Centered (horizontal + vertical) |
+| Close button | `[ X ]` ghost button, top-right |
+
+```css modal.css
+/* Modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal dialog */
+.modal-dialog {
+  background: var(--surface);                  /* #111111 */
+  border: 1px solid var(--border-visible);     /* #333333 */
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Close button — [ X ] ghost style */
+.modal-close {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary); /* #999999 */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+```
+
+### Bottom sheets
+
+| Property | Value |
+|----------|-------|
+| Background | `--surface` (`#111111`) |
+| Handle bar | `2px` height, centered, `--border-visible` color |
+| Top radius | `16px` |
+| Interaction | Drag-to-dismiss |
+| Full-page sheets | Title centered, dismiss button right, sections use `--text-secondary` headings |
+
+```css bottom-sheet.css
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);              /* #111111 */
+  border-top: 1px solid var(--border-visible); /* #333333 */
+  border-radius: 16px 16px 0 0;
+  padding: 24px;
+}
+
+.bottom-sheet__handle {
+  width: 40px;
+  height: 2px;
+  background: var(--border-visible);       /* #333333 */
+  border-radius: 1px;
+  margin: 0 auto 16px;
+}
+```
+
+### Dropdowns
+
+| Property | Value |
+|----------|-------|
+| Background | `--surface-raised` (`#1A1A1A`) |
+| Border | `1px solid --border-visible` (`#333333`) |
+| Radius | `8px` |
+| Item height | `44px` |
+| Selected state | Left `2px solid --accent` (`#D71921`) indicator bar |
+| Shadow | None |
+
+```css dropdown.css
+.dropdown {
+  background: var(--surface-raised);         /* #1A1A1A */
+  border: 1px solid var(--border-visible);   /* #333333 */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: var(--text-primary);  /* #E8E8E8 */
+  position: relative;
+}
+
+/* Selected item indicator */
+.dropdown-item--selected {
+  color: var(--text-display);  /* #FFFFFF */
+}
+
+.dropdown-item--selected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);   /* #D71921 */
+}
+```
+
+### Why there are no toasts
+
+<Warning>
+Nothing does not use toast notifications. Use inline status text near the trigger element instead: `[SAVED]`, `[ERROR: message]`. Style with Space Mono, `--caption` size (12px), and place it adjacent to the action that caused the state change.
+</Warning>
+
+Toasts fight the instrument-panel aesthetic — they float, they animate from the edges, and they disappear on their own. Inline bracket text is persistent, readable, and in the right place.
+
+```css inline-status.css
+/* Inline status text — replaces toasts */
+.inline-status {
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary); /* #999999 */
+  margin-top: 4px;
+}
+
+.inline-status--error {
+  color: var(--accent); /* #D71921 */
+}
+```

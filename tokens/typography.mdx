@@ -1,0 +1,101 @@
+---
+title: 'Typography Tokens'
+description: 'Font stack, type scale, and typographic rules for the Nothing design system.'
+---
+
+The Nothing design system uses three fonts with precisely defined roles. Each font corresponds to a layer in the visual hierarchy and must not be used outside that role.
+
+## Font stack
+
+The three fonts cover every typographic context in the system. All three are available on Google Fonts.
+
+| Role | Font | Fallback | Weights |
+|------|------|----------|---------|
+| **Display** | `"Doto"` | `"Space Mono", monospace` | 400–700, variable dot-size |
+| **Body / UI** | `"Space Grotesk"` | `"DM Sans", system-ui, sans-serif` | Light 300, Regular 400, Medium 500, Bold 700 |
+| **Data / Labels** | `"Space Mono"` | `"JetBrains Mono", "SF Mono", monospace` | Regular 400, Bold 700 |
+
+### Why these three fonts
+
+Doto is a variable dot-matrix font — the closest available approximation of Nothing's proprietary NDot 57 typeface. Space Grotesk and Space Mono are both published by Colophon Foundry, the same foundry behind Nothing's actual typefaces. The shared design DNA means the three fonts cohere visually even across very different roles.
+
+## Loading fonts from Google Fonts
+
+Declare all three families in a single `@import` statement. Add this at the top of your CSS file, before any other rules.
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+```
+
+Or use the `<link>` tag in your HTML `<head>`:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+```
+
+<Note>
+Declare which fonts are required before starting any design work. Never assume fonts are already loaded in the environment.
+</Note>
+
+## Type scale
+
+Nine steps from `--display-xl` down to `--label`. Every token has a defined size, line-height, letter-spacing, and use case. Do not create intermediate sizes outside this scale.
+
+| Token | Size | Line height | Letter spacing | Use |
+|-------|------|-------------|----------------|-----|
+| `--display-xl` | 72px | 1.0 | -0.03em | Hero numbers, time displays |
+| `--display-lg` | 48px | 1.05 | -0.02em | Section heroes, percentages |
+| `--display-md` | 36px | 1.1 | -0.02em | Page titles |
+| `--heading` | 24px | 1.2 | -0.01em | Section headings |
+| `--subheading` | 18px | 1.3 | 0 | Subsections |
+| `--body` | 16px | 1.5 | 0 | Body text |
+| `--body-sm` | 14px | 1.5 | 0.01em | Secondary body |
+| `--caption` | 12px | 1.4 | 0.04em | Timestamps, footnotes |
+| `--label` | 11px | 1.2 | 0.08em | ALL CAPS monospace labels |
+
+## Typographic rules
+
+### Doto: display sizes only
+
+Use Doto at 36px and above (`--display-md`, `--display-lg`, `--display-xl`). Never use it for body text, labels, captions, or any text below 36px. Apply tight tracking.
+
+### Labels: Space Mono, ALL CAPS
+
+Every label in the system uses Space Mono set in ALL CAPS with 0.06–0.1em letter-spacing at 11–12px. Think instrument panel labels — the treatment signals metadata, not content.
+
+### Data and numbers: Space Mono
+
+Any numeric value, measurement, or data point uses Space Mono. Units are set at `--label` size, slightly raised, placed adjacent to the value.
+
+### Four-level hierarchy — no more
+
+The font hierarchy runs in exactly four levels. Do not add a fifth.
+
+```
+Display (Doto)         → Hero numbers, major headlines
+Heading (Space Grotesk) → Section headings, primary UI text
+Label (Space Mono CAPS) → Metadata, navigation, system info
+Body (Space Grotesk)   → Readable prose and secondary content
+```
+
+## Font discipline decision table
+
+Before adding a new font size or weight, consult this table. Most distinctions that look like typographic problems are actually spacing or color problems.
+
+| Decision | Resolve with size? | Resolve with weight? | Resolve with color? |
+|----------|--------------------|----------------------|---------------------|
+| Heading vs. body | Yes | No | No |
+| Label vs. value | No | No | Yes |
+| Active vs. inactive nav | No | No | Yes |
+| Hero number vs. unit | Yes | No | No |
+| Section title vs. content | Yes | Optional | No |
+
+<Tip>
+Per screen, use a maximum of 2 font families, 3 font sizes, and 2 font weights. Every additional size or weight costs visual coherence. If you find yourself reaching for a new size, it is probably a spacing problem — add distance instead.
+</Tip>
+
+<Warning>
+Do not use Doto below 36px. Do not use Space Grotesk for data labels. Do not set labels in mixed case — ALL CAPS is required for every Space Mono label in the system.
+</Warning>

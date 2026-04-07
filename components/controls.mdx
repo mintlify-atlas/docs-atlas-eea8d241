@@ -1,0 +1,389 @@
+---
+title: "Controls"
+description: "Buttons, inputs, segmented controls, toggles, date navigation, and tags in the Nothing design language."
+---
+
+Every control in Nothing uses Space Mono ALL CAPS text. This gives interactive elements the look of instrument labels — you push a button on a panel, not tap a soft web element.
+
+## Buttons
+
+All buttons share the same typography: Space Mono, 13px, ALL CAPS, `0.06em` letter-spacing, `12px 24px` padding, minimum height `44px`.
+
+### Variant table
+
+| Variant | Background | Border | Text | Radius |
+|---------|------------|--------|------|--------|
+| Primary | `--text-display` (`#FFFFFF`) | none | `--black` (`#000000`) | `999px` (pill) |
+| Secondary | transparent | `1px solid --border-visible` (`#333333`) | `--text-primary` (`#E8E8E8`) | `999px` |
+| Ghost | transparent | none | `--text-secondary` (`#999999`) | `0` |
+| Destructive | transparent | `1px solid --accent` (`#D71921`) | `--accent` (`#D71921`) | `999px` |
+
+<Note>
+The Primary button inverts: white background with black text. It is the only element that uses a fully white fill. Reserve it for the single most important action on a screen.
+</Note>
+
+<Warning>
+Ghost buttons have `border-radius: 0`. Do not round them — the flat edge is intentional and carries meaning. The `[ X ]` close button and back chevron both use the ghost style.
+</Warning>
+
+### CSS implementation
+
+```css buttons.css
+/* Shared button base */
+.btn {
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 24px;
+  min-height: 44px;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 200ms ease-out;
+}
+
+/* Primary */
+.btn--primary {
+  background: var(--text-display); /* #FFFFFF */
+  color: var(--black);             /* #000000 */
+  border-radius: 999px;
+}
+
+/* Secondary */
+.btn--secondary {
+  background: transparent;
+  border: 1px solid var(--border-visible); /* #333333 */
+  color: var(--text-primary);              /* #E8E8E8 */
+  border-radius: 999px;
+}
+
+/* Ghost */
+.btn--ghost {
+  background: transparent;
+  color: var(--text-secondary); /* #999999 */
+  border-radius: 0;
+}
+
+/* Destructive */
+.btn--destructive {
+  background: transparent;
+  border: 1px solid var(--accent); /* #D71921 */
+  color: var(--accent);            /* #D71921 */
+  border-radius: 999px;
+}
+
+/* Hover: brighten border/text, never scale or shadow */
+.btn--secondary:hover { border-color: var(--text-primary); }
+.btn--ghost:hover     { color: var(--text-primary); }
+```
+
+---
+
+## Inputs
+
+Inputs follow an instrument-panel aesthetic: clean, labelled rows with a clear focus state. The label sits above in Space Mono ALL CAPS; the value uses Space Mono for data entry.
+
+### Border styles
+
+| Style | Spec | Use |
+|-------|------|-----|
+| Underline (preferred) | `1px solid --border-visible` bottom only | Most form fields |
+| Full border | `1px solid --border-visible`, `8px` radius | Contained forms, search fields |
+
+### States
+
+| State | Border | Message |
+|-------|--------|---------|
+| Default | `--border-visible` (`#333333`) | — |
+| Focus | `--text-primary` (`#E8E8E8`) | — |
+| Error | `--accent` (`#D71921`) | Message below in `--accent` |
+
+### CSS implementation
+
+```css inputs.css
+/* Field wrapper */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label */
+.field__label {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary); /* #999999 */
+}
+
+/* Underline input (preferred) */
+.input--underline {
+  font-family: "Space Mono", monospace;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-visible); /* #333333 */
+  color: var(--text-primary);                     /* #E8E8E8 */
+  padding: 8px 0;
+  outline: none;
+  width: 100%;
+  transition: border-color 200ms ease-out;
+}
+
+.input--underline:focus {
+  border-bottom-color: var(--text-primary); /* #E8E8E8 */
+}
+
+.input--underline.is-error {
+  border-bottom-color: var(--accent);       /* #D71921 */
+}
+
+/* Full-border input */
+.input--bordered {
+  font-family: "Space Mono", monospace;
+  font-size: 14px;
+  background: transparent;
+  border: 1px solid var(--border-visible);  /* #333333 */
+  border-radius: 8px;
+  color: var(--text-primary);              /* #E8E8E8 */
+  padding: 10px 14px;
+  outline: none;
+  width: 100%;
+  transition: border-color 200ms ease-out;
+}
+
+.input--bordered:focus {
+  border-color: var(--text-primary); /* #E8E8E8 */
+}
+
+/* Error message */
+.field__error {
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--accent); /* #D71921 */
+}
+```
+
+---
+
+## Segmented Control
+
+A pill or rounded container with mutually exclusive options. Active segments invert to white fill; inactive are transparent.
+
+| Property | Value |
+|----------|-------|
+| Container border | `1px solid --border-visible` (`#333333`) |
+| Container shape | Pill (`999px`) or `8px` rounded |
+| Height | `36–44px` |
+| Active | `--text-display` bg (`#FFFFFF`), `--black` text (`#000000`) |
+| Inactive | transparent bg, `--text-secondary` text (`#999999`) |
+| Text | Space Mono, ALL CAPS, `--label` size (11px) |
+| Transition | `200ms ease-out` |
+| Max segments | 2–4 |
+
+<Note>
+Keep segmented controls to 4 segments maximum. Beyond 4, labels become too compressed to read at the required ALL CAPS monospace size.
+</Note>
+
+```css segmented-control.css
+.segmented-control {
+  display: inline-flex;
+  border: 1px solid var(--border-visible); /* #333333 */
+  border-radius: 999px;
+  overflow: hidden;
+  height: 40px;
+}
+
+.segmented-control__item {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-secondary);  /* #999999 */
+  background: transparent;
+  border: none;
+  transition: background 200ms ease-out, color 200ms ease-out;
+}
+
+.segmented-control__item--active {
+  background: var(--text-display); /* #FFFFFF */
+  color: var(--black);             /* #000000 */
+}
+```
+
+---
+
+## Toggles / Switches
+
+Pill-shaped track with a circular thumb. On/off states swap track and thumb colors.
+
+| Part | Off state | On state |
+|------|-----------|----------|
+| Track | `--border-visible` (`#333333`) | `--text-display` (`#FFFFFF`) |
+| Thumb | `--text-disabled` (`#666666`) | `--black` (`#000000`) |
+| Min touch target | `44px` | `44px` |
+
+```css toggles.css
+/* Toggle wrapper — ensures 44px touch target */
+.toggle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 12px;
+  cursor: pointer;
+}
+
+/* Track */
+.toggle-track {
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--border-visible);   /* #333333 — off */
+  position: relative;
+  transition: background 200ms ease-out;
+}
+
+.toggle-track--on {
+  background: var(--text-display);     /* #FFFFFF — on */
+}
+
+/* Thumb */
+.toggle-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-disabled);    /* #666666 — off */
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 200ms ease-out, background 200ms ease-out;
+}
+
+.toggle-track--on .toggle-thumb {
+  background: var(--black);            /* #000000 — on */
+  transform: translateX(20px);
+}
+```
+
+---
+
+## Date / Period Navigation
+
+A linear stepping control for navigating between time periods. No calendar popups — the arrow interaction is the interface.
+
+| Property | Value |
+|----------|-------|
+| Layout | `< LABEL >` — back chevron, period label, forward chevron |
+| Label font | Space Mono or Space Grotesk, ALL CAPS |
+| Arrows | Thin chevrons, `--text-secondary` (`#999999`) |
+| Touch target | `44px` minimum for each arrow |
+
+<Note>
+  There are no calendar popovers in the Nothing design language. Linear stepping — one period at a time — is the intended interaction. This keeps the UI instrument-like: a mechanical forward/back control, not an interactive calendar widget.
+</Note>
+
+```css date-navigation.css
+.period-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.period-nav__arrow {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary); /* #999999 */
+  transition: color 200ms ease-out;
+}
+
+.period-nav__arrow:hover {
+  color: var(--text-primary); /* #E8E8E8 */
+}
+
+.period-nav__label {
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-display); /* #FFFFFF */
+}
+```
+
+```html date-navigation-example.html
+<div class="period-nav">
+  <button class="period-nav__arrow" aria-label="Previous period">&#8249;</button>
+  <span class="period-nav__label">March 2025</span>
+  <button class="period-nav__arrow" aria-label="Next period">&#8250;</button>
+</div>
+```
+
+---
+
+## Tags / Chips
+
+Small pill or rectangular labels for categories, filters, and selections.
+
+| Property | Pill | Technical |
+|----------|------|-----------|
+| Border | `1px solid --border-visible` (`#333333`) | `1px solid --border-visible` (`#333333`) |
+| Background | none | none |
+| Text | Space Mono, `--caption` (12px), ALL CAPS | Space Mono, `--caption` (12px), ALL CAPS |
+| Radius | `999px` | `4px` |
+| Padding | `4px 12px` | `4px 12px` |
+| Active border | `--text-display` (`#FFFFFF`) | `--text-display` (`#FFFFFF`) |
+| Active text | `--text-display` (`#FFFFFF`) | `--text-display` (`#FFFFFF`) |
+
+<Note>
+Use pill radius for user-facing category chips (tags on articles, filter pills). Use `4px` technical radius for data filters, status labels, and instrument-panel contexts.
+</Note>
+
+```css tags.css
+/* Shared chip base */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--border-visible); /* #333333 */
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);            /* #999999 */
+  cursor: pointer;
+  transition: border-color 200ms ease-out, color 200ms ease-out;
+}
+
+/* Pill variant */
+.chip--pill {
+  border-radius: 999px;
+}
+
+/* Technical variant */
+.chip--technical {
+  border-radius: 4px;
+}
+
+/* Active state */
+.chip--active {
+  border-color: var(--text-display); /* #FFFFFF */
+  color: var(--text-display);        /* #FFFFFF */
+}
+```

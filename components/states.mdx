@@ -1,0 +1,287 @@
+---
+title: "State Patterns"
+description: "Error, empty, loading, and disabled state treatments in the Nothing design language."
+---
+
+States in Nothing are communicated through structural changes — border color, opacity, bracket text — never through color fills, background tints, or floating notifications.
+
+## Error state
+
+Errors surface at the field level, the form level, or inline. All three patterns share the same signal: `--accent` red applied to the border, never to the background.
+
+| Context | Treatment |
+|---------|-----------|
+| Input field | Border → `--accent` (`#D71921`) + message below in `--accent` |
+| Form-level | Summary box `1px solid --accent`, no red background |
+| Inline | `[ERROR]` prefix, `Space Mono`, `--accent` color |
+
+<Warning>
+  Never use red backgrounds, alert banners, or modal dialogs for error states. The accent red is a signal light — one per screen, applied to borders and text only.
+</Warning>
+
+```css error.css
+/* Field error: border becomes accent */
+.input--underline.is-error {
+  border-bottom-color: var(--accent); /* #D71921 */
+}
+
+.input--bordered.is-error {
+  border-color: var(--accent); /* #D71921 */
+}
+
+/* Error message below field */
+.field__error-message {
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--accent);       /* #D71921 */
+  margin-top: 6px;
+}
+
+/* Form-level error summary box */
+.form-error-summary {
+  border: 1px solid var(--accent); /* #D71921 */
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: transparent;         /* never a red background */
+}
+
+.form-error-summary__heading {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/* Inline [ERROR] prefix */
+.inline-error {
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--accent); /* #D71921 */
+}
+```
+
+```html error-examples.html
+<!-- Inline field error -->
+<div class="field">
+  <label class="field__label">API KEY</label>
+  <input class="input--underline is-error" type="text" />
+  <span class="field__error-message">Invalid key format</span>
+</div>
+
+<!-- Inline error bracket text -->
+<span class="inline-error">[ERROR: CONNECTION REFUSED]</span>
+
+<!-- Form-level summary -->
+<div class="form-error-summary">
+  <p class="form-error-summary__heading">[ERROR] Form could not be submitted</p>
+  <p>Check the highlighted fields above and try again.</p>
+</div>
+```
+
+---
+
+## Empty state
+
+Empty states communicate that no content exists yet — not that something went wrong. They use generous padding, secondary-tone text, and an optional dot-matrix illustration.
+
+| Property | Value |
+|----------|-------|
+| Padding | `96px` minimum, top and bottom |
+| Headline color | `--text-secondary` (`#999999`) |
+| Description | 1 sentence max, `--text-disabled` (`#666666`) |
+| Illustration | Optional dot-matrix only — no mascots, icons, or photography |
+| Layout | Centered |
+
+<Note>
+  Empty states must never include mascots, characters, or cheerful illustrations. A subtle dot-matrix pattern is the only permitted decorative element. The tone is neutral and informational, not playful.
+</Note>
+
+```css empty-state.css
+/* Empty state container */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 96px 24px;
+}
+
+/* Optional dot-matrix background motif */
+.empty-state--dot-matrix {
+  background-image: radial-gradient(circle, var(--border) 0.5px, transparent 0.5px);
+  background-size: 12px 12px;
+}
+
+/* Headline */
+.empty-state__headline {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--text-secondary); /* #999999 */
+  margin-bottom: 8px;
+}
+
+/* Description */
+.empty-state__description {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-disabled);  /* #666666 */
+  max-width: 280px;
+}
+```
+
+```html empty-state-example.html
+<div class="empty-state empty-state--dot-matrix">
+  <p class="empty-state__headline">No data recorded yet</p>
+  <p class="empty-state__description">
+    Data will appear here once your first session is complete.
+  </p>
+</div>
+```
+
+---
+
+## Loading state
+
+Loading uses hardware-style segmented spinners or segmented bar + percentage readout. No skeleton screens — use bracket text instead.
+
+| Pattern | Use |
+|---------|-----|
+| Segmented spinner | Small inline loading indicators, icon-level |
+| Segmented bar + percentage | Full-page loads, progress-aware operations |
+| `[LOADING]` bracket text | Text content areas awaiting data |
+
+<Warning>
+  Skeleton screens are not used in Nothing. Placeholder shimmer animations and grey rectangles conflict with the instrument-panel aesthetic. Use `[LOADING]` bracket text or the segmented spinner instead.
+</Warning>
+
+```css loading.css
+/* Segmented spinner — hardware-style */
+.spinner {
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+
+/* Spinner segments as rotated rectangles */
+.spinner__segment {
+  position: absolute;
+  width: 3px;
+  height: 8px;
+  background: var(--text-display);
+  border-radius: 0; /* square ends */
+  top: 50%;
+  left: 50%;
+  transform-origin: center 12px;
+  opacity: 0.15;
+}
+
+.spinner__segment:nth-child(1)  { transform: rotate(0deg)   translateY(-12px); opacity: 1.0; }
+.spinner__segment:nth-child(2)  { transform: rotate(45deg)  translateY(-12px); opacity: 0.7; }
+.spinner__segment:nth-child(3)  { transform: rotate(90deg)  translateY(-12px); opacity: 0.5; }
+.spinner__segment:nth-child(4)  { transform: rotate(135deg) translateY(-12px); opacity: 0.3; }
+.spinner__segment:nth-child(5)  { transform: rotate(180deg) translateY(-12px); opacity: 0.2; }
+.spinner__segment:nth-child(6)  { transform: rotate(225deg) translateY(-12px); opacity: 0.15; }
+.spinner__segment:nth-child(7)  { transform: rotate(270deg) translateY(-12px); opacity: 0.15; }
+.spinner__segment:nth-child(8)  { transform: rotate(315deg) translateY(-12px); opacity: 0.15; }
+
+/* [LOADING] bracket text — replaces skeletons */
+.loading-text {
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary); /* #999999 */
+}
+```
+
+```html loading-examples.html
+<!-- Inline loading text — replaces skeleton -->
+<span class="loading-text">[LOADING]</span>
+
+<!-- Loading with percentage -->
+<span class="loading-text">[LOADING 42%]</span>
+
+<!-- Spinner markup -->
+<div class="spinner" aria-label="Loading" role="status">
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+  <div class="spinner__segment"></div>
+</div>
+```
+
+---
+
+## Disabled state
+
+Disabled elements are visually retreated using reduced opacity or the `--text-disabled` color. Borders fade to `--border`.
+
+| Property | Value |
+|----------|-------|
+| Opacity method | `opacity: 0.4` on the entire component |
+| Color method | Text → `--text-disabled` (`#666666`) |
+| Border | Fades to `--border` (`#222222`) |
+| Cursor | `not-allowed` |
+| Interaction | None — do not suppress pointer events, override them |
+
+<Tip>
+  Use the opacity method (`opacity: 0.4`) for complex components like buttons and cards. Use the color method (`--text-disabled`) for individual text elements where full-component opacity would create layering issues.
+</Tip>
+
+```css disabled.css
+/* Opacity method — for buttons, cards, controls */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.card--disabled {
+  opacity: 0.4;
+}
+
+/* Color method — for text elements */
+.text--disabled {
+  color: var(--text-disabled); /* #666666 */
+}
+
+/* Border fade — for bordered controls */
+.input--underline:disabled {
+  border-bottom-color: var(--border); /* #222222, faded from #333333 */
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.input--bordered:disabled {
+  border-color: var(--border);       /* #222222 */
+  color: var(--text-disabled);       /* #666666 */
+  cursor: not-allowed;
+}
+
+/* Toggle disabled */
+.toggle-wrapper--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+```
+
+### Summary
+
+| State | Primary signal | Color used | Background change |
+|-------|---------------|------------|-------------------|
+| Error | Border → `--accent` | `#D71921` | Never |
+| Empty | `--text-secondary` headline | `#999999` | Optional dot-matrix only |
+| Loading | `[LOADING]` text / segmented spinner | `--text-secondary` | Never |
+| Disabled | `opacity: 0.4` or `--text-disabled` | `#666666` | Never |

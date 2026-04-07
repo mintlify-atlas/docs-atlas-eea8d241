@@ -1,0 +1,168 @@
+---
+title: 'Craft Rules'
+description: 'Nine concrete rules for composing Nothing-style interfaces — from hierarchy and typography to spacing, color, and motion.'
+---
+
+The design principles set the direction. These nine craft rules tell you exactly how to execute. Work through them in order when composing a new screen: hierarchy first, then type, then spacing, then containers, then color.
+
+---
+
+## 1. Visual hierarchy: the three-layer rule
+
+Every screen has exactly three layers of importance. Not two, not five. Three. Name them before writing any code.
+
+| Layer | What it is | How to render it |
+|---|---|---|
+| **Primary** | The one thing the user sees first. A number, a headline, a state. | Doto or Space Grotesk at display size. `--text-display`. 48–96px breathing room. |
+| **Secondary** | Supporting context. Labels, descriptions, related data. | Space Grotesk at body/subheading. `--text-primary`. Grouped tight (8–16px) to the primary. |
+| **Tertiary** | Metadata, navigation, system info. Visible but never competing. | Space Mono at caption/label. `--text-secondary` or `--text-disabled`. ALL CAPS. Pushed to edges or bottom. |
+
+<Note>
+**The squint test:** Squint at the screen. Can you still tell what's most important? If two things compete for attention, one needs to shrink, fade, or move.
+</Note>
+
+<Warning>
+**Common mistake:** Making everything "secondary." Evenly-sized elements with even spacing produces visual flatness. Be brave — make the primary element absurdly large and the tertiary absurdly small. The contrast is the hierarchy.
+</Warning>
+
+---
+
+## 2. Font discipline
+
+Per screen, use a maximum of:
+- **2 font families** — Space Grotesk + Space Mono. Doto only for hero moments.
+- **3 font sizes** — one large, one medium, one small.
+- **2 font weights** — Regular + one other (usually Light or Medium, rarely Bold).
+
+Think of it as a budget. Every additional size or weight costs visual coherence. Before adding a new size, ask: can you create this distinction with spacing or color instead?
+
+| Decision | Change size? | Change weight? | Change color? |
+|---|:---:|:---:|:---:|
+| Heading vs. body | Yes | No | No |
+| Label vs. value | No | No | Yes |
+| Active vs. inactive nav | No | No | Yes |
+| Hero number vs. unit | Yes | No | No |
+| Section title vs. content | Yes | Optional | No |
+
+<Tip>
+If you're reaching for a new font size, it's probably a spacing problem. Add distance instead.
+</Tip>
+
+---
+
+## 3. Spacing as meaning
+
+Spacing is the primary tool for communicating relationships. Every gap carries semantic meaning.
+
+```text
+Tight  (4–8px)   = "These belong together"   — icon + label, number + unit
+Medium (16px)    = "Same group, different items" — list items, form fields
+Wide   (32–48px) = "New group starts here"    — section breaks
+Vast   (64–96px) = "This is a new context"    — hero to content, major divisions
+```
+
+<Note>
+If you find yourself reaching for a divider line, the spacing is probably wrong. Dividers are a symptom of insufficient spacing contrast. Use them only in data-dense lists where items are structurally identical.
+</Note>
+
+---
+
+## 4. Container strategy
+
+When you need to group elements, use the lightest tool that works. Work through this preference list in order and stop at the first option that solves the problem:
+
+<Steps>
+  <Step title="Spacing alone">
+    Proximity groups items without any visual artifact. Prefer this whenever possible.
+  </Step>
+  <Step title="A single divider line">
+    One border between groups. No background change.
+  </Step>
+  <Step title="A subtle border outline">
+    A thin border wrapping a group. Adds visual weight — use sparingly.
+  </Step>
+  <Step title="A surface card with background change">
+    The heaviest option. Reserve for the most distinct sections. Never box the most important element — let it float on the background.
+  </Step>
+</Steps>
+
+---
+
+## 5. Color as hierarchy
+
+In a monochrome system, the gray scale is the hierarchy. Use a maximum of four levels per screen:
+
+```css
+--text-display   /* 100% opacity — hero numbers, one per screen */
+--text-primary   /* 90%  opacity — body text, primary content */
+--text-secondary /* 60%  opacity — labels, captions, metadata */
+--text-disabled  /* 40%  opacity — disabled states, timestamps, hints */
+```
+
+Red (`#D71921`) is not part of the hierarchy. It is an interrupt — "look here, now." If nothing on the screen is urgent, no red appears.
+
+<Note>
+Data status colors (success green, warning amber, accent red) are exempt from the "one accent" rule when they are encoding data values. Apply color to the value itself, not to labels or row backgrounds.
+</Note>
+
+---
+
+## 6. Consistency vs. variance
+
+The system works because it is consistent in most things and deliberately different in exactly one.
+
+**Be consistent in:**
+- Font families
+- Label treatment — always Space Mono, ALL CAPS
+- Spacing rhythm
+- Color roles
+- Component shapes
+- Alignment
+
+**Break the pattern in exactly one place per screen.** An oversized number. A circular widget among rectangles. A red accent among grays. A Doto headline. A vast gap where everything else is tight.
+
+<Tip>
+This single break is the design. Without it, the screen is a sterile grid. With more than one break, it is visual chaos.
+</Tip>
+
+---
+
+## 7. Compositional balance
+
+Asymmetry over symmetry. Centered layouts feel generic. Favor deliberately unbalanced composition using one of three layout patterns:
+
+| Pattern | Description |
+|---|---|
+| **Large left, small right** | Hero metric on the left, metadata stack on the right. |
+| **Top-heavy** | Big headline near the top, sparse content below. Vast space at the bottom. |
+| **Edge-anchored** | Important elements pinned to screen edges, negative space in the center. |
+
+Balance heavy elements with more empty space — not with more heavy elements.
+
+---
+
+## 8. The Nothing vibe
+
+The vibe is not a rule you check off — it is the character that emerges when all the other rules are applied with intention. The six qualities are: confidence through emptiness, precision in the small things, data as beauty, mechanical honesty, one moment of surprise, and percussive not fluid.
+
+For full descriptions of each quality, see [Design Principles](/philosophy/principles#the-nothing-vibe).
+
+---
+
+## 9. Visual variety in data-dense screens
+
+When three or more data sections appear on one screen, vary the visual form so the screen doesn't collapse into a wall of identical rows.
+
+| Form | Best for | Visual weight |
+|---|---|---|
+| Hero number (large Doto / Space Mono) | Single key metric | Heavy — use once |
+| Segmented progress bar | Progress toward a goal | Medium |
+| Concentric rings / arcs | Multiple related percentages | Medium |
+| Inline compact bar | Secondary metrics in rows | Light |
+| Number-only with status color | Values without proportion | Lightest |
+| Sparkline | Trends over time | Medium |
+| Stat row (label + value) | Simple data points | Light |
+
+<Note>
+Lead with the heaviest treatment. Give secondary sections a different form. Tertiary sections get the lightest. The **form** varies; the **voice** stays the same.
+</Note>

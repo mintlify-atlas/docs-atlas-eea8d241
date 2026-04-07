@@ -1,97 +1,57 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Nothing Design Skill"
+description: "A Claude Code skill for generating UI in the Nothing design language. Monochrome, typographic, industrial."
 ---
 
-## Setting up
+A reusable skill for [Claude Code](https://claude.ai/code) that generates UI following the Nothing design language — Swiss typography, OLED blacks, segmented progress bars, and dot-matrix motifs. Say `/nothing-design` and Claude builds interfaces that are monochromatic, typographically driven, and information-dense without clutter.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Copy the skill into your Claude Code skills directory and start using it immediately.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Generate your first Nothing-style UI in minutes with a working example.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Design Philosophy" icon="compass" href="/philosophy/principles">
+    Understand the core principles: subtract, structure as ornament, type does the heavy lifting.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Token Reference" icon="palette" href="/tokens/typography">
+    Exact font stacks, color values, spacing scales, and motion specs.
   </Card>
-</Columns>
+  <Card title="Component Library" icon="square" href="/components/layout-surfaces">
+    Buttons, cards, inputs, segmented progress bars, and all UI patterns.
+  </Card>
+  <Card title="Platform Output" icon="code" href="/platforms/html-css">
+    Generate HTML/CSS, SwiftUI, or React/Tailwind — all from the same skill.
+  </Card>
+</CardGroup>
 
-## Create beautiful pages
+## How it works
 
-Everything you need to create world-class documentation.
+<Steps>
+  <Step title="Install the skill">
+    Clone the repo and copy the `nothing-design` folder into `~/.claude/skills/`.
+  </Step>
+  <Step title="Trigger it">
+    In Claude Code, say `/nothing-design` or "Nothing style" to activate the skill.
+  </Step>
+  <Step title="Choose your mode">
+    Tell Claude whether you want dark mode (OLED black) or light mode (warm off-white). Both are first-class.
+  </Step>
+  <Step title="Get your UI">
+    Claude generates production-ready HTML/CSS, SwiftUI, or React/Tailwind following the Nothing design language.
+  </Step>
+</Steps>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## What makes Nothing design different
 
-## Need inspiration?
+The Nothing design language is built on a few hard rules that most design systems ignore:
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+- **Three layers only.** Every screen has exactly one primary element, supporting context, and metadata. Not two layers, not five.
+- **Type is the hierarchy.** Scale, weight, and spacing communicate importance — not color, not icons, not borders.
+- **Monochrome by default.** Color is an event. Red (`#D71921`) signals urgency. Everything else is grayscale.
+- **Both modes are designed, not derived.** Dark mode is an instrument panel in a dark room. Light mode is a printed technical manual. Neither is an afterthought.
+
+<Note>
+  The skill will never trigger automatically for generic UI tasks. You must explicitly say "Nothing style", "Nothing design", or `/nothing-design` to activate it.
+</Note>
